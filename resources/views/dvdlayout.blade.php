@@ -17,22 +17,125 @@
 </head>
 
 <div class="container">
-    <p>Below is a more-detailed discussion of the main HTTP methods. Click on a tab for more information about the desired HTTP method.</p>
+    <h1>Welcome to MOVIE-RENTAL store.</h1>
+    <p></p>
+    <p>MOVIE-RENTAL store web application, you can Add/Remove store's client and also can Add/Remove the movie in the store.</p>
+    <p>Not only that, you would be able to manage rental/return process as well by choose the tab below.</p>
+
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#Client" data-toggle="tab">CLIENT</a></li>
+        <li class="active"><a href="#Store" data-toggle="tab">STORE</a></li>
+        <li class=""><a href="#Client" data-toggle="tab">CLIENT</a></li>
         <li class=""><a href="#Movie" data-toggle="tab">MOVIE</a></li>
         <li class=""><a href="#Rental" data-toggle="tab">RENTAL</a></li>
-        <li><a href="#delete" data-toggle="tab">DELETE</a></li>
+        <li><a href="#Return" data-toggle="tab">RETURN</a></li>
     </ul>
     <div id="methodTabContent" class="tab-content">
-        <div class="tab-pane fade active in" id="Client">
+
+        <!--STORE TAB-->
+
+        <div class="tab-pane fade active in" id="Store">
+            <p></p>
+            <p>All of activities of our Client's.</p>
+
+            <div class="container">
+                <p><strong>Client Table</strong><p>
+                <div class="table-responsive">
+                    <table class="table" id="client_table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Movie Rental</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
+            <script>
+
+                $.ajax({
+                    type    : "GET",
+                    cache   : false,
+                    url     : "Client",
+                    success : function(data) {
+                        console.log(data);
+                        var trClient = '';
+                        $.each(data, function (key, val) {
+
+                            trClient += '<tr><td>' + (key+1) + '</td><td>' + val.Name;
+
+                            if(val.hasOwnProperty('Details')){
+
+                                $lastObjIndex = (Object.keys(val.Details).length - 1);
+
+                                trClient += '</td><td>' + val.Details[$lastObjIndex].Movie + '</td><td>' + val.Details[$lastObjIndex].Status + '</td><td>' + val.Details[$lastObjIndex].Date + '</td></tr>';
+
+                            }else{
+                                trClient += '</td><td>' + '-' + '</td><td>' + '-' + '</td><td>' + '-' + '</td></tr>';
+
+                            }
+
+                            //trClient += '<tr><td>' + (key+1) + '</td><td>' + val.Name + '</td><td>' + val.Type + '</td><td>' + val.Status + '</td></tr>';
+                        });
+
+                        if (data.status != 'Client not found') {
+                            $('#client_table').append(trClient);
+                        }
+                    }
+                })
+
+            </script>
+
+            <p></p>
+            <p>All of inventory of our Store.</p>
+
+            <div class="container">
+                <p><strong>Movie Table</strong><p>
+                <div class="table-responsive">
+                    <table class="table" id="movie_table">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Available</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
+            <script>
+                $.ajax({
+                    type    : "GET",
+                    cache   : false,
+                    url     : "Movie",
+                    success : function(data) {
+                        console.log(data);
+                        var trMovie = '';
+                        $.each(data, function (key, val) {
+
+                            trMovie += '<tr><td>' + (key+1) + '</td><td>' + val.Name + '</td><td>' + val.Type + '</td><td>' + val.Status + '</td></tr>';
+                        });
+
+                        if (data.status != 'Movie not found') {
+                            $('#movie_table').append(trMovie);
+                        }
+                    }
+                })
+
+            </script>
+
+        </div>
+
+        <!--CLIENT TAB-->
+
+        <div class="tab-pane fade" id="Client">
             <p></p>
             <p>Add/Remove client to the store.</p>
-            <p><strong>Examples:</strong></p>
-            <ul>
-                <li><em>POST http://www.example.com/customers</em></li>
-                <li><em>POST http://www.example.com/customers/12345/orders</em></li>
-            </ul>
 
             <div class="form-group">
                 <label for="usr">Client Name:</label>
@@ -40,18 +143,47 @@
             </div>
 
             <button type="button" class="btn btn-primary navbar-btn" onclick = postClientData();>ADD</button>
+
+            <script>
+                function postClientData() {
+                    $.ajax({
+                        type    : "POST",
+                        cache   : false,
+                        url     : "Client",
+                        data    : {'Name' : document.getElementById("ClientName").value},
+                        success : function(data) {
+                            console.log(data);
+                            location.reload();
+                        }
+                    })
+                }
+            </script>
+
             <button type="button" class="btn btn-primary navbar-btn" onclick = deleteClientData();>DELETE</button>
 
+            <script>
+                function deleteClientData() {
+                    $.ajax({
+                        type    : "DELETE",
+                        cache   : false,
+                        url     : "Client/"+$('#ClientName').val()+"/Delete",
+                        success : function(data) {
+                            console.log(data);
+                            location.reload();
+
+                        }
+                    })
+                }
+
+            </script>
+
         </div>
+
+        <!--MOVIE TAB-->
+
         <div class="tab-pane fade" id="Movie">
             <p></p>
-            <p>Add/Remove movies in the store.</p>
-            <p><strong>Examples:</strong></p>
-            <ul>
-                <li><em>GET http://www.example.com/customers/12345</em></li>
-                <li><em>GET http://www.example.com/customers/12345/orders</em></li>
-                <li><em>GET http://www.example.com/buckets/sample</em></li>
-            </ul>
+            <p>Add/Remove movie in the store.</p>
 
             <div class="form-group">
                 <label for="usr">Movie Name:</label>
@@ -69,40 +201,229 @@
              </div>
 
             <button type="button" class="btn btn-primary navbar-btn" onclick = postMovieData();>ADD</button>
+
+            <script>
+                function postMovieData() {
+                    $.ajax({
+                        type    : "POST",
+                        cache   : false,
+                        url     : "Movie",
+                        data    : { 'Name' : document.getElementById("MovieName").value, 'Type' : document.getElementById("MovieType").value , 'Status' : 'YES' },
+                        success : function(data) {
+                            console.log(data);
+                            location.reload();
+                        }
+                    })
+                }
+            </script>
+
             <button type="button" class="btn btn-primary navbar-btn" onclick = deleteMovieData();>DELETE</button>
 
+            <script>
+                function deleteMovieData() {
+                    $.ajax({
+                        type    : "DELETE",
+                        cache   : false,
+                        url     : "Movie/"+$('#MovieName').val()+"/Delete",
+                        success : function(data) {
+                            console.log(data);
+                            location.reload();
+                        }
+                    })
+                }
+            </script>
+
         </div>
+
+        <!--RENTAL TAB-->
+
         <div class="tab-pane fade" id="Rental">
-            <p>Rental/Return</p>
-            <p><strong>Examples:</strong></p>
-            <ul>
-                <li><em>PUT http://www.example.com/customers/12345</em></li>
-                <li><em>PUT http://www.example.com/customers/12345/orders/98765</em></li>
-                <li><em>PUT http://www.example.com/buckets/secret_stuff</em></li>
-            </ul>
+            <p></p>
+            <p>Choose client and movie which want to proceed rental.</p>
 
-            <table id="movie_table" border='1'>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Available</th>
-                </tr>
-            </table>
+            <div class="form-group">
+                <label for="ClientName">Select client name:</label>
+                <select class="form-control" id="rentalClient" size="5">
+                </select>
+            </div>
 
-            <button type="button" class="btn btn-primary navbar-btn" onclick = getAllMovie();>GET</button>
+            <script>
+                $.ajax({
+                    type    : "GET",
+                    cache   : false,
+                    url     : "Client",
+                    success : function(data){
+
+                        //clear the current content of the select
+                        $('#rentalClient').html('');
+
+                        //iterate over the data and append a select option
+                        $.each(data, function(key, val){
+
+                            // If 'Details' is one of the object:
+                            if(val.hasOwnProperty('Details')){
+                                $lastObjIndex = (Object.keys(val.Details).length - 1);
+                                console.log(val.Details);
+
+                                // If most recent status is 'Return', we allow client to rent:
+                                if(val.Details[$lastObjIndex].Status == 'Returned'){
+                                    $('#rentalClient').append('<option value="' + val.Name + '">' + val.Name + '</option>');
+                                    console.log(val.Details[$lastObjIndex].Status);
+                                }
+
+                             // Otherwise, fresh client should not have 'Details:
+                            }else{
+                                $('#rentalClient').append('<option value="' + val.Name + '">' + val.Name + '</option>');
+                            }
+
+                        })
+                    }
+                });
+            </script>
+
+            <div class="form-group">
+                <label for="MovieName">Select movie name:</label>
+                <select class="form-control" id="rentalMovie" size="5">
+                </select>
+            </div>
+
+            <script>
+                $.ajax({
+                    type    : "GET",
+                    cache   : false,
+                    url     : "Movie",
+                    success : function(data){
+
+                        //clear the current content of the select
+                        $('#rentalMovie').html('');
+
+                        //iterate over the data and append a select option
+                        $.each(data, function(key, val){
+                            //console.log(data);
+
+                            if(val.Status == 'YES') {
+                                $('#rentalMovie').append('<option value="' + val.Name + '">' + val.Name + '</option>');
+                            }
+                        })
+                    }
+                });
+            </script>
+
+            <button type="button" class="btn btn-primary navbar-btn" onclick = postRental();>RENT!</button>
+
+            <script>
+                function postRental() {
+                    $.ajax({
+                        type    : "POST",
+                        cache   : false,
+                        url     : "Rental",
+                        data    : { 'Name' : document.getElementById("rentalClient").value, 'Movie' : document.getElementById("rentalMovie").value },
+                        success : function(data) {
+                            console.log(data);
+                            location.reload();
+                        }
+                    })
+                }
+            </script>
 
         </div>
-        <div class="tab-pane fade" id="delete">
-            <p>DELETE is pretty easy to understand.  It is used to **delete** a resource identified by a URI.
-            </p><p>On successful deletion, return HTTP status 200 (OK) along with a response body, perhaps the representation of the deleted item (often demands too much bandwidth), or a wrapped response (see Return Values below).  Either that or return HTTP status 204 (NO CONTENT) with no response body.  In other words, a 204 status with no body, or the JSEND-style response and HTTP status 200 are the recommended responses.</p>
-            <p>HTTP-spec-wise, DELETE operations are idempotent.  If you DELETE a resource, it's removed.  Repeatedly calling DELETE on that resource ends up the same: the resource is gone.  If calling DELETE say, decrements a counter (within the resource), the DELETE call is no longer idempotent.  As mentioned previously, usage statistics and measurements may be updated while still considering the service idempotent as long as no resource data is changed.  Using POST for non-idempotent resource requests is recommended.</p>
-            <p>There is a caveat about DELETE idempotence, however.  Calling DELETE on a resource a second time will often return a 404 (NOT FOUND) since it was already removed and therefore is no longer findable.  This, by some opinions, makes DELETE operations no longer idempotent, however, the end-state of the resource is the same. Returning a 404 is acceptable and communicates accurately the status of the call.</p>
-            <p><strong>Examples:</strong></p>
-            <ul>
-                <li><em>DELETE http://www.example.com/customers/12345</em></li>
-                <li><em>DELETE http://www.example.com/customers/12345/orders</em></li>
-                <li><em>DELETE http://www.example.com/bucket/sample</em></li>
-            </ul>
+
+        <!--RETURN TAB-->
+
+        <div class="tab-pane fade" id="Return">
+            <p></p>
+            <p>Choose client and movie which want to proceed return.</p>
+
+            <div class="form-group">
+                <label for="ClientName">Select client name:</label>
+                <select class="form-control" id="returnClient" size="5">
+                </select>
+            </div>
+
+            <script>
+                $.ajax({
+                    type    : "GET",
+                    cache   : false,
+                    url     : "Client",
+                    success : function(data){
+
+                        //clear the current content of the select
+                        $('#returnClient').html('');
+
+                        //iterate over the data and append a select option
+                        $.each(data, function(key, val){
+
+                            // If there is
+                            //if(Object.keys(val).length >= 3) {
+                            if(val.hasOwnProperty('Details')){
+                                //console.log(val);
+
+                                $lastObjIndex = (Object.keys(val.Details).length - 1);
+                                console.log(val.Details);
+
+                                if(val.Details[$lastObjIndex].Status == 'Rented'){
+                                    $('#returnClient').append('<option value="' + val.Name + '">' + val.Name + '</option>');
+                                    console.log(val.Details[$lastObjIndex].Status);
+                                }
+
+                            }
+                        })
+                    }
+                });
+            </script>
+
+            <div class="form-group">
+                <label for="MovieName">Select movie name:</label>
+                <select class="form-control" id="returnMovie" size="5">
+                </select>
+            </div>
+
+            <script>
+                $.ajax({
+                    type    : "GET",
+                    cache   : false,
+                    url     : "Movie",
+                    success : function(data){
+
+                        //clear the current content of the select
+                        $('#returnMovie').html('');
+
+                        //iterate over the data and append a select option
+                        $.each(data, function(key, val){
+                            //console.log(data);
+
+                            if(val.Status == 'NO') {
+                                $('#returnMovie').append('<option value="' + val.Name + '">' + val.Name + '</option>');
+                            }
+                        })
+                    }
+                });
+            </script>
+
+            <button type="button" class="btn btn-primary navbar-btn" onclick = putReturn();>RETURN!</button>
+
+            <script>
+                function putReturn() {
+                    $.ajax({
+                        type    : "PUT",
+                        cache   : false,
+                        url     : "Return/"+document.getElementById("returnClient").value+"/"+document.getElementById("returnMovie").value,
+                        success : function(data) {
+                            console.log(data.status);
+
+                            // If return invalid movie:
+                            if(data.status == 'Details incorrect'){
+                                alert('You are not return rented movie!!!');
+                            }else{
+                                alert('Movie returned successfully.');
+                            }
+
+                            location.reload();
+                        }
+                    })
+                }
+            </script>
+
         </div>
     </div>
 </div>
@@ -113,97 +434,3 @@
 </div><!-- /.container -->
 </body>
 </html>
-
-<script>
-    function loadDoc() {
-        $.post("Account",
-                {
-                    name: "Donald Duck",
-                    Amount: "1000"
-                });
-    }
-    function getData() {
-        $.ajax({
-            url : 'Account',
-            type: 'GET',
-            success: function(data) {
-                console.log(data);
-            }
-        })
-    }
-
-    function postClientData() {
-        $.ajax({
-            type: "POST",
-            cache: false,
-            url : "Client",
-            data: { 'Name' : document.getElementById("ClientName").value},
-            success: function(data) {
-                console.log(data);
-                location.reload();
-            }
-        })
-    }
-
-    function deleteClientData() {
-        $.ajax({
-            type: "DELETE",
-            cache: false,
-            url : "Client/"+$('#ClientName').val()+"/Delete",
-            success: function(data) {
-                console.log(data);
-                location.reload();
-
-            }
-        })
-    }
-
-    function postMovieData() {
-        $.ajax({
-            type: "POST",
-            cache: false,
-            url : "Movie",
-            data: { 'Name' : document.getElementById("MovieName").value, 'Type' : document.getElementById("MovieType").value , 'Status' : 'YES' },
-            success: function(data) {
-                console.log(data);
-                location.reload();
-            }
-        })
-    }
-
-    function deleteMovieData() {
-        $.ajax({
-            type: "DELETE",
-            cache: false,
-            url : "Movie/"+$('#MovieName').val()+"/Delete",
-            success: function(data) {
-                console.log(data);
-                location.reload();
-            }
-        })
-    }
-
-    function getAllMovie() {
-        $.ajax({
-            type: "GET",
-            cache: false,
-            url : "Movie",
-            success: function(data) {
-                console.log(data);
-                var trHTML = '';
-                $.each(data, function (i, item) {
-                    trHTML += '<tr><td>' + item.Name + '</td><td>' + item.Type + '</td><td>' + item.Status + '</td></tr>';
-                });
-                $('#movie_table').append(trHTML);
-
-                location.reload();
-            }
-        })
-    }
-
-    function handleData(data) {
-        alert(data);
-        //do some stuff
-    }
-
-</script>

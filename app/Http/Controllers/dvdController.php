@@ -226,7 +226,7 @@ class dvdController extends Controller
             if($movieStatus == 'YES'){
 
                 // If client already rent movie:
-                if($clientStatus == 'Rental'){
+                if($clientStatus == 'Rented'){
 
                     return response(['status'=>'Client can rent only one movie']);
 
@@ -234,7 +234,7 @@ class dvdController extends Controller
                 }else{
 
                     // Set input data to client details
-                    $input = ['Movie'=>$movieName] + ['Status' => 'Rental'] + ['Date' => $time->format('Y-m-d H:i:s')];
+                    $input = ['Movie'=>$movieName] + ['Status' => 'Rented'] + ['Date' => $time->format('Y-m-d H:i:s')];
 
                     // Add rental to client collection
                     $return = $client->addMovie($input, $name);
@@ -291,10 +291,10 @@ class dvdController extends Controller
             $recentMovie  = last($clientData[0]['Details'])['Movie'];
 
             // If correct rental status and movie at most recent detail:
-            if(($recentStatus == 'Rental') && ($recentMovie == $movieName)) {
+            if(($recentStatus == 'Rented') && ($recentMovie == $movieName)) {
 
                 // Set input data to client details
-                $input = ['Movie' => $movieName] + ['Status' => 'Return'] + ['Date' => $time->format('Y-m-d H:i:s')];
+                $input = ['Movie' => $movieName] + ['Status' => 'Returned'] + ['Date' => $time->format('Y-m-d H:i:s')];
 
                 // Add rental to client collection
                 $return = $client->addMovie($input, $name);
