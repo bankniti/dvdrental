@@ -18,15 +18,15 @@ Route::get('/home', function () {
     return view('home');
 });
 
-Route::post	  ('/Client'				   , 'dvdController@C_AddClient' 	   ); // Add new client
-Route::get	  ('/Client'				   , 'dvdController@C_GetAllClient'    ); // Get all Client
-Route::post	  ('/Movie'					   , 'dvdController@C_AddMovie' 	   ); // Add new movie
-Route::get	  ('/Movie'					   , 'dvdController@C_GetAllMovie' 	   ); // Get All movie
-Route::get	  ('/Client/{name}/Name'       , 'dvdController@C_GetClient' 	   ); // Get specific client data
-Route::get	  ('/Movie/{name}/Name'		   , 'dvdController@C_GetMovie' 	   ); // Get specific movie data
-Route::delete ('/Client/{name}/Delete'	   , 'dvdController@C_RemoveClient'    ); // Remove specific client
-Route::delete ('/Client/Delete/All'		   , 'dvdController@C_RemoveAllClient' ); // Remove all client(s)
-Route::delete ('/Movie/{name}/Delete'	   , 'dvdController@C_RemoveMovie' 	   ); // Remove specific movie
-Route::delete ('/Movie/Delete/All'		   , 'dvdController@C_RemoveAllMovie'  ); // Remove all movie(s)
-Route::post   ('/Rental'                   , 'dvdController@C_Rental' 		   ); // Rent a movie
-Route::put    ('/Return/{name}/{movieName}', 'dvdController@C_Return'          ); // Return a movie
+Route::post	  ('/clients'		           , 'dvdController@C_AddClient' 	   ); // Add new client
+Route::get	  ('/clients'				   , 'dvdController@C_GetAllClient'    ); // Get all Client
+Route::post	  ('/movies'				   , 'dvdController@C_AddMovie' 	   ); // Add new movie
+Route::get	  ('/movies'				   , 'dvdController@C_GetAllMovie' 	   ); // Get All movie
+Route::get	  ('/clients/{name}'           , 'dvdController@C_GetClient' 	   ); // Get specific client data
+Route::get	  ('/movies/{name}'		       , 'dvdController@C_GetMovie' 	   ); // Get specific movie data
+Route::delete ('/clients/{name}'	       , 'dvdController@C_RemoveClient'    ); // Remove specific client
+Route::delete ('/clients'		           , 'dvdController@C_RemoveAllClient' ); // Remove all client(s)
+Route::delete ('/movies/{name}'	           , 'dvdController@C_RemoveMovie' 	   ); // Remove specific movie
+Route::delete ('/movies'		           , 'dvdController@C_RemoveAllMovie'  ); // Remove all movie(s)
+Route::post   ('/rental'                   , 'dvdController@C_Rental' 		   ); // Rent a movie
+Route::put    ('/return/{name}/{movieName}', 'dvdController@C_Return'          ); // Return a movie

@@ -59,7 +59,7 @@
                 $.ajax({
                     type    : "GET",
                     cache   : false,
-                    url     : "Client",
+                    url     : "clients",
                     success : function(data) {
                         console.log(data);
                         var trClient = '';
@@ -67,6 +67,7 @@
 
                             trClient += '<tr><td>' + (key+1) + '</td><td>' + val.Name;
 
+                            // If clients has Details:
                             if(val.hasOwnProperty('Details')){
 
                                 $lastObjIndex = (Object.keys(val.Details).length - 1);
@@ -75,10 +76,8 @@
 
                             }else{
                                 trClient += '</td><td>' + '-' + '</td><td>' + '-' + '</td><td>' + '-' + '</td></tr>';
-
                             }
 
-                            //trClient += '<tr><td>' + (key+1) + '</td><td>' + val.Name + '</td><td>' + val.Type + '</td><td>' + val.Status + '</td></tr>';
                         });
 
                         if (data.status != 'Client not found') {
@@ -112,7 +111,7 @@
                 $.ajax({
                     type    : "GET",
                     cache   : false,
-                    url     : "Movie",
+                    url     : "movies",
                     success : function(data) {
                         console.log(data);
                         var trMovie = '';
@@ -149,7 +148,7 @@
                     $.ajax({
                         type    : "POST",
                         cache   : false,
-                        url     : "Client",
+                        url     : "clients",
                         data    : {'Name' : document.getElementById("ClientName").value},
                         success : function(data) {
                             console.log(data);
@@ -166,7 +165,7 @@
                     $.ajax({
                         type    : "DELETE",
                         cache   : false,
-                        url     : "Client/"+$('#ClientName').val()+"/Delete",
+                        url     : "clients/"+$('#ClientName').val(),
                         success : function(data) {
                             console.log(data);
                             location.reload();
@@ -207,7 +206,7 @@
                     $.ajax({
                         type    : "POST",
                         cache   : false,
-                        url     : "Movie",
+                        url     : "movies",
                         data    : { 'Name' : document.getElementById("MovieName").value, 'Type' : document.getElementById("MovieType").value , 'Status' : 'YES' },
                         success : function(data) {
                             console.log(data);
@@ -224,7 +223,7 @@
                     $.ajax({
                         type    : "DELETE",
                         cache   : false,
-                        url     : "Movie/"+$('#MovieName').val()+"/Delete",
+                        url     : "movies/"+$('#MovieName').val(),
                         success : function(data) {
                             console.log(data);
                             location.reload();
@@ -251,7 +250,7 @@
                 $.ajax({
                     type    : "GET",
                     cache   : false,
-                    url     : "Client",
+                    url     : "clients",
                     success : function(data){
 
                         //clear the current content of the select
@@ -291,7 +290,7 @@
                 $.ajax({
                     type    : "GET",
                     cache   : false,
-                    url     : "Movie",
+                    url     : "movies",
                     success : function(data){
 
                         //clear the current content of the select
@@ -299,7 +298,6 @@
 
                         //iterate over the data and append a select option
                         $.each(data, function(key, val){
-                            //console.log(data);
 
                             if(val.Status == 'YES') {
                                 $('#rentalMovie').append('<option value="' + val.Name + '">' + val.Name + '</option>');
@@ -316,7 +314,7 @@
                     $.ajax({
                         type    : "POST",
                         cache   : false,
-                        url     : "Rental",
+                        url     : "rental",
                         data    : { 'Name' : document.getElementById("rentalClient").value, 'Movie' : document.getElementById("rentalMovie").value },
                         success : function(data) {
                             console.log(data);
@@ -344,7 +342,7 @@
                 $.ajax({
                     type    : "GET",
                     cache   : false,
-                    url     : "Client",
+                    url     : "clients",
                     success : function(data){
 
                         //clear the current content of the select
@@ -382,7 +380,7 @@
                 $.ajax({
                     type    : "GET",
                     cache   : false,
-                    url     : "Movie",
+                    url     : "movies",
                     success : function(data){
 
                         //clear the current content of the select
@@ -407,7 +405,7 @@
                     $.ajax({
                         type    : "PUT",
                         cache   : false,
-                        url     : "Return/"+document.getElementById("returnClient").value+"/"+document.getElementById("returnMovie").value,
+                        url     : "return/"+document.getElementById("returnClient").value+"/"+document.getElementById("returnMovie").value,
                         success : function(data) {
                             console.log(data.status);
 
