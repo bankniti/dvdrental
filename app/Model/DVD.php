@@ -29,17 +29,30 @@ class DVD extends Eloquent {
     }
     public function editMovie($post, $name){
         $rd = DB::collection($this->getTable())->where('Name', $name);
-        $rd->update($post);
-        return $rd->get();
+
+        if($rd->update($post)){
+            return true;
+        }else{
+            return false;
+        }
     }
     public function removeMovie($name){
         $rd = DB::collection($this->getTable())->where('Name', $name);
-        $rd->delete();
-        return $rd->get();
+
+        if($rd->delete()){
+            return true;
+        }else{
+            return false;
+        }
     }
     public function removeAllMovie(){
         $rd = DB::collection($this->getTable());
-        $rd->delete();
-        return $rd->get();
+
+        if($rd->delete()){
+            return true;
+        }else{
+            return false;
+        }
+
     }
 }

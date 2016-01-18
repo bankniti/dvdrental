@@ -33,8 +33,11 @@ class dvdController extends Controller
                 unset($post['_token']);
             }
 
-            $client->addClient($post);
-            return response(['status'=>'success']);
+            if($client->addClient($post)){
+                return response(['status'=>'success']);
+            }else{
+                return response(['status'=>'Failed to add client']);
+            }
 
         }
     }
@@ -71,10 +74,8 @@ class dvdController extends Controller
     public function C_RemoveClient($name){
 
         $client = new Client();
-        $data = $client->getClient($name);
 
-        if(isset($data[0])){
-            $client->removeClient($name);
+        if($client->removeClient($name)){
             return response(['status'=>'success']);
         }else{
             return response(['status'=>'Client not found']);
@@ -86,10 +87,8 @@ class dvdController extends Controller
     public function C_RemoveAllClient(){
 
         $client = new Client();
-        $data = $client->getAllClient();
 
-        if(isset($data[0])){
-            $client->removeAllClient();
+        if($client->removeAllClient()){
             return response(['status'=>'success']);
         }else{
             return response(['status'=>'Client not found']);
@@ -124,8 +123,11 @@ class dvdController extends Controller
                 unset($post['_token']);
             }
 
-            $movie->addMovie($post);
-            return response(['status'=>'success']);
+            if($movie->addMovie($post)){
+                return response(['status'=>'success']);
+            }else{
+                return response(['status'=>'Failed to add movie']);
+            }
 
         }
     }
@@ -163,10 +165,8 @@ class dvdController extends Controller
     public function C_RemoveMovie($name){
 
         $movie = new DVD();
-        $data = $movie->getMovie($name);
 
-        if(isset($data[0])){
-            $movie->removeMovie($name);
+        if($movie->removeMovie($name)){
             return response(['status'=>'success']);
         }else{
             return response(['status'=>'Movie not found']);
@@ -178,10 +178,8 @@ class dvdController extends Controller
     public function C_RemoveAllMovie(){
 
         $movie = new DVD();
-        $data = $movie->getAllMovie();
 
-        if(isset($data[0])){
-            $movie->removeAllMovie();
+        if($movie->removeAllMovie()){
             return response(['status'=>'success']);
         }else{
             return response(['status'=>'Movie not found']);
@@ -237,20 +235,18 @@ class dvdController extends Controller
                     $input = ['Movie'=>$movieName] + ['Status' => 'Rented'] + ['Date' => $time->format('Y-m-d H:i:s')];
 
                     // Add rental to client collection
-                    $return = $client->addMovie($input, $name);
 
                     // If client edit successfully:
-                    if(isset($return[0])) {
+                    if($client->addMovie($input, $name)) {
                         response(['status' => 'success']);
                     }else{
                         return response(['status'=>'Cannot add Client details']);
                     }
 
                     // Edit movie status to unavailable
-                    $return = $movie->editMovie(['Status'=>'NO'], $movieName);
 
                     // If movie edit successfully:
-                    if(isset($return[0])) {
+                    if($movie->editMovie(['Status'=>'NO'], $movieName)) {
                         response(['status' => 'success']);
                     }else{
                         return response(['status'=>'Cannot edit Movie']);
@@ -297,20 +293,18 @@ class dvdController extends Controller
                 $input = ['Movie' => $movieName] + ['Status' => 'Returned'] + ['Date' => $time->format('Y-m-d H:i:s')];
 
                 // Add rental to client collection
-                $return = $client->addMovie($input, $name);
 
                 // If client edit successfully:
-                if (isset($return[0])) {
+                if ($client->addMovie($input, $name)) {
                     response(['status' => 'success']);
                 } else {
                     return response(['status' => 'Cannot add Client details']);
                 }
 
                 // Edit movie status to unavailable
-                $return = $movie->editMovie(['Status' => 'YES'], $movieName);
 
                 // If movie edit successfully:
-                if (isset($return[0])) {
+                if ($movie->editMovie(['Status' => 'YES'], $movieName)) {
                     response(['status' => 'success']);
                 } else {
                     return response(['status' => 'Cannot edit Movie']);

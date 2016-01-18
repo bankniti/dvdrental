@@ -9,6 +9,7 @@ class Client extends Eloquent {
     protected $collection = 'CLIENT';
 
     public function addClient($post){
+
         if($this->insert($post)){
             return true;
         }else{
@@ -29,22 +30,38 @@ class Client extends Eloquent {
     }
     public function editClient($post, $name){
         $rd = DB::collection($this->getTable())->where('Name', $name);
-        $rd->update($post);
-        return $rd->get();
+
+        if($rd->update($post)){
+            return true;
+        }else{
+            return false;
+        }
     }
     public function removeClient($name){
         $rd = DB::collection($this->getTable())->where('Name', $name);
-        $rd->delete();
-        return $rd->get();
+
+        if($rd->delete()){
+            return true;
+        }else{
+            return false;
+        }
     }
     public function removeAllClient(){
         $rd = DB::collection($this->getTable());
-        $rd->delete();
-        return $rd->get();
+
+        if($rd->delete()){
+            return true;
+        }else{
+            return false;
+        }
     }
     public function addMovie($input,$name){
         $rd = DB::collection($this->getTable())->where('Name', $name);
-        $rd->push('Details', $input);
-        return $rd->get();
+
+        if($rd->push('Details', $input)){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
