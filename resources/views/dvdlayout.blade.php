@@ -152,7 +152,16 @@
                         data    : {'Name' : document.getElementById("ClientName").value},
                         success : function(data) {
                             console.log(data);
-                            location.reload();
+
+                            if(data.status == 'success'){
+                                alert('Done!');
+                                location.reload();
+
+                            }else if(data.status == 'Please insert Name'){
+                                alert('Please insert Name');
+                            }else{
+                                alert('Fail!')
+                            }
                         }
                     })
                 }
@@ -167,10 +176,19 @@
                         cache   : false,
                         url     : "clients/"+$('#ClientName').val(),
                         success : function(data) {
-                            console.log(data);
                             location.reload();
 
+                            if(data.status == 'success'){
+                                alert('Done!');
+                                console.log(data);
+
+                            }else{
+                                alert('Failed, invalid client name!')
+                            }
+
                         }
+                    }).fail(function(){
+                        alert('Failed, please insert client name!');
                     })
                 }
 
@@ -210,7 +228,15 @@
                         data    : { 'Name' : document.getElementById("MovieName").value, 'Type' : document.getElementById("MovieType").value , 'Status' : 'YES' },
                         success : function(data) {
                             console.log(data);
-                            location.reload();
+
+                            if(data.status == 'success'){
+                                alert('Done!');
+                                location.reload();
+                            }else if(data.status == 'Please insert Name'){
+                                alert('Please insert Name');
+                            }else{
+                                alert('Fail!')
+                            }
                         }
                     })
                 }
@@ -226,8 +252,16 @@
                         url     : "movies/"+$('#MovieName').val(),
                         success : function(data) {
                             console.log(data);
-                            location.reload();
+
+                            if(data.status == 'success'){
+                                alert('Done!');
+                                location.reload();
+                            }else{
+                                alert('Failed, invalid movie name!')
+                            }
                         }
+                    }).fail(function(){
+                        alert('Failed, please insert movie name!');
                     })
                 }
             </script>
