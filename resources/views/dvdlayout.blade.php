@@ -61,7 +61,7 @@
                     cache   : false,
                     url     : "clients",
                     success : function(data) {
-                        console.log(data);
+                        //console.log(data);
                         var trClient = '';
                         $.each(data, function (key, val) {
 
@@ -84,8 +84,9 @@
                             $('#client_table').append(trClient);
                         }
                     }
-                })
-
+                }).fail(function(data){
+                    alert(data.responseText);
+                });
             </script>
 
             <p></p>
@@ -113,7 +114,7 @@
                     cache   : false,
                     url     : "movies",
                     success : function(data) {
-                        console.log(data);
+                        //console.log(data);
                         var trMovie = '';
                         $.each(data, function (key, val) {
 
@@ -124,8 +125,9 @@
                             $('#movie_table').append(trMovie);
                         }
                     }
-                })
-
+                }).fail(function(data){
+                    alert(data.responseText);
+                });
             </script>
 
         </div>
@@ -150,19 +152,11 @@
                         cache   : false,
                         url     : "clients",
                         data    : {'Name' : document.getElementById("ClientName").value},
-                        success : function(data) {
-                            console.log(data);
-
-                            if(data.status == 'success'){
-                                alert('Done!');
-                                location.reload();
-
-                            }else if(data.status == 'Please insert Name'){
-                                alert('Please insert Name');
-                            }else{
-                                alert('Fail!')
-                            }
+                        success : function() {
+                            location.reload();
                         }
+                    }).fail(function(){
+                        alert('Failed, please insert client name!');
                     })
                 }
             </script>
@@ -175,20 +169,11 @@
                         type    : "DELETE",
                         cache   : false,
                         url     : "clients/"+$('#ClientName').val(),
-                        success : function(data) {
+                        success : function() {
                             location.reload();
-
-                            if(data.status == 'success'){
-                                alert('Done!');
-                                console.log(data);
-
-                            }else{
-                                alert('Failed, invalid client name!')
-                            }
-
                         }
                     }).fail(function(){
-                        alert('Failed, please insert client name!');
+                        alert('Failed, client not found!');
                     })
                 }
 
@@ -226,18 +211,12 @@
                         cache   : false,
                         url     : "movies",
                         data    : { 'Name' : document.getElementById("MovieName").value, 'Type' : document.getElementById("MovieType").value , 'Status' : 'YES' },
-                        success : function(data) {
-                            console.log(data);
-
-                            if(data.status == 'success'){
-                                alert('Done!');
-                                location.reload();
-                            }else if(data.status == 'Please insert Name'){
-                                alert('Please insert Name');
-                            }else{
-                                alert('Fail!')
-                            }
+                        success : function() {
+                            //console.log(data);
+                            location.reload();
                         }
+                    }).fail(function(){
+                        alert('Failed, please insert movie name!');
                     })
                 }
             </script>
@@ -251,17 +230,11 @@
                         cache   : false,
                         url     : "movies/"+$('#MovieName').val(),
                         success : function(data) {
-                            console.log(data);
-
-                            if(data.status == 'success'){
-                                alert('Done!');
-                                location.reload();
-                            }else{
-                                alert('Failed, invalid movie name!')
-                            }
+                            //console.log(data);
+                            location.reload();
                         }
                     }).fail(function(){
-                        alert('Failed, please insert movie name!');
+                        alert('Failed, Movie not found!');
                     })
                 }
             </script>
@@ -296,12 +269,12 @@
                             // If 'Details' is one of the object:
                             if(val.hasOwnProperty('Details')){
                                 $lastObjIndex = (Object.keys(val.Details).length - 1);
-                                console.log(val.Details);
+                                //console.log(val.Details);
 
                                 // If most recent status is 'Return', we allow client to rent:
                                 if(val.Details[$lastObjIndex].Status == 'Returned'){
                                     $('#rentalClient').append('<option value="' + val.Name + '">' + val.Name + '</option>');
-                                    console.log(val.Details[$lastObjIndex].Status);
+                                    //console.log(val.Details[$lastObjIndex].Status);
                                 }
 
                              // Otherwise, fresh client should not have 'Details:
@@ -311,6 +284,8 @@
 
                         })
                     }
+                }).fail(function(data){
+                    alert(data.responseText);
                 });
             </script>
 
@@ -338,6 +313,8 @@
                             }
                         })
                     }
+                }).fail(function(data){
+                    alert(data.responseText);
                 });
             </script>
 
@@ -350,10 +327,11 @@
                         cache   : false,
                         url     : "rental",
                         data    : { 'Name' : document.getElementById("rentalClient").value, 'Movie' : document.getElementById("rentalMovie").value },
-                        success : function(data) {
-                            console.log(data);
+                        success : function() {
                             location.reload();
                         }
+                    }).fail(function(data){
+                        alert(data.responseText);
                     })
                 }
             </script>
@@ -385,22 +363,23 @@
                         //iterate over the data and append a select option
                         $.each(data, function(key, val){
 
-                            // If there is
-                            //if(Object.keys(val).length >= 3) {
+                            // If there is 'Details' field:
                             if(val.hasOwnProperty('Details')){
                                 //console.log(val);
 
                                 $lastObjIndex = (Object.keys(val.Details).length - 1);
-                                console.log(val.Details);
+                                //console.log(val.Details);
 
                                 if(val.Details[$lastObjIndex].Status == 'Rented'){
                                     $('#returnClient').append('<option value="' + val.Name + '">' + val.Name + '</option>');
-                                    console.log(val.Details[$lastObjIndex].Status);
+                                    //console.log(val.Details[$lastObjIndex].Status);
                                 }
 
                             }
                         })
                     }
+                }).fail(function(data){
+                    alert(data.responseText);
                 });
             </script>
 
@@ -429,6 +408,8 @@
                             }
                         })
                     }
+                }).fail(function(data){
+                    alert(data.responseText);
                 });
             </script>
 
@@ -440,18 +421,13 @@
                         type    : "PUT",
                         cache   : false,
                         url     : "return/"+document.getElementById("returnClient").value+"/"+document.getElementById("returnMovie").value,
-                        success : function(data) {
-                            console.log(data.status);
-
-                            // If return invalid movie:
-                            if(data.status == 'Details incorrect'){
-                                alert('You are not return rented movie!!!');
-                            }else{
-                                alert('Movie returned successfully.');
-                            }
-
+                        success : function() {
+                            //console.log(data.status);
+                            alert('Movie is returned successfully.');
                             location.reload();
                         }
+                    }).fail(function(data){
+                        alert(data.responseText);
                     })
                 }
             </script>

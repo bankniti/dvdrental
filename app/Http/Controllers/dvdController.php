@@ -20,7 +20,7 @@ class dvdController extends Controller
         if($check->fails()){
 
             if(!($request->has('Name'))){
-                return response(['status'=>'Please insert Name']);
+                return response()->json(['status'=>'Please insert Name'], 403);
             }
 
         }else{
@@ -34,9 +34,9 @@ class dvdController extends Controller
             }
 
             if($client->addClient($post)){
-                return response(['status'=>'success']);
+                return response()->json(['status'=>'success'], 201);
             }else{
-                return response(['status'=>'Failed to add client']);
+                return response()->json(['status'=>'Failed to add client'], 404);
             }
 
         }
@@ -49,9 +49,9 @@ class dvdController extends Controller
         $data   = $client->getClient($name);
 
         if(isset ($data[0])){
-            return response($data);
+            return response($data, 200);
         }else{
-            return response(['status'=>'Client not found']);
+            return response()->json(['status'=>'Client not found'], 404);
         }
 
     }
@@ -63,9 +63,9 @@ class dvdController extends Controller
         $data  = $movie->getAllClient();
 
         if(isset ($data[0])){
-            return response($data);
+            return response($data, 200);
         }else{
-            return response(['status'=>'Client not found']);
+            return response()->json(['status'=>'Client not found'], 404);
         }
 
     }
@@ -76,9 +76,9 @@ class dvdController extends Controller
         $client = new Client();
 
         if($client->removeClient($name)){
-            return response(['status'=>'success']);
+            return response()->json(['status'=>'success'], 200);
         }else{
-            return response(['status'=>'Client not found']);
+            return response()->json(['status'=>'Client not found'], 404);
         }
 
     }
@@ -88,10 +88,10 @@ class dvdController extends Controller
 
         $client = new Client();
 
-        if($client->removeAllClient()){
-            return response(['status'=>'success']);
+        if($client->removeClient($name)){
+            return response()->json(['status'=>'success'], 200);
         }else{
-            return response(['status'=>'Client not found']);
+            return response()->json(['status'=>'Client not found'], 404);
         }
 
     }
@@ -104,13 +104,9 @@ class dvdController extends Controller
         if($check->fails()){
 
             if(!($request->has('Name'))){
-
-                return response(['status'=>'Please insert Name']);
-
+                return response()->json(['status'=>'Please insert Name'], 403);
             }elseif(!($request->has('Type'))){
-
-                return response(['status'=>'Please insert DVD Type']);
-
+                return response()->json(['status'=>'Please insert DVD Type'], 403);
             }
 
         }else{
@@ -124,9 +120,9 @@ class dvdController extends Controller
             }
 
             if($movie->addMovie($post)){
-                return response(['status'=>'success']);
+                return response()->json(['status'=>'success'], 201);
             }else{
-                return response(['status'=>'Failed to add movie']);
+                return response()->json(['status'=>'Failed to add movie'], 404);
             }
 
         }
@@ -139,13 +135,12 @@ class dvdController extends Controller
         $data  = $movie->getMovie($name);
 
         if(isset ($data[0])){
-            return response($data);
+            return response($data, 200);
         }else{
-            return response(['status'=>'Movie not found']);
+            return response()->json(['status'=>'Movie not found'], 404);
         }
 
     }
-
 
     // This function to get all movie data
     public function C_GetAllMovie(){
@@ -154,9 +149,9 @@ class dvdController extends Controller
         $data  = $movie->getAllMovie();
 
         if(isset ($data[0])){
-            return response($data);
+            return response($data, 200);
         }else{
-            return response(['status'=>'Movie not found']);
+            return response()->json(['status'=>'Movie not found'], 404);
         }
 
     }
@@ -167,9 +162,9 @@ class dvdController extends Controller
         $movie = new DVD();
 
         if($movie->removeMovie($name)){
-            return response(['status'=>'success']);
+            return response()->json(['status'=>'success'], 200);
         }else{
-            return response(['status'=>'Movie not found']);
+            return response()->json(['status'=>'Movie not found'], 404);
         }
 
     }
@@ -179,10 +174,10 @@ class dvdController extends Controller
 
         $movie = new DVD();
 
-        if($movie->removeAllMovie()){
-            return response(['status'=>'success']);
+        if($movie->removeMovie($name)){
+            return response()->json(['status'=>'success'], 200);
         }else{
-            return response(['status'=>'Movie not found']);
+            return response()->json(['status'=>'Movie not found'], 404);
         }
 
     }
@@ -226,9 +221,9 @@ class dvdController extends Controller
                 // If client already rent movie:
                 if($clientStatus == 'Rented'){
 
-                    return response(['status'=>'Client can rent only one movie']);
+                    return response()->json(['status'=>'Client can rent only one movie'], 403);
 
-                 // Otherwise, proceed rental:
+                    // Otherwise, proceed rental:
                 }else{
 
                     // Set input data to client details
@@ -238,34 +233,36 @@ class dvdController extends Controller
 
                     // If client edit successfully:
                     if($client->addMovie($input, $name)) {
-                        response(['status' => 'success']);
-                    }else{
-                        return response(['status'=>'Cannot add Client details']);
-                    }
 
-                    // Edit movie status to unavailable
+                        response()->json(['status'=>'success'], 201);
 
-                    // If movie edit successfully:
-                    if($movie->editMovie(['Status'=>'NO'], $movieName)) {
-                        response(['status' => 'success']);
+                        // Edit movie status to unavailable
+
+                        // If movie edit successfully:
+                        if($movie->editMovie(['Status'=>'NO'], $movieName)) {
+                            return response()->json(['status'=>'success'], 200);
+                        }else{
+                            return response()->json(['status'=>'Failed to edit movie'], 404);
+                        }
+
                     }else{
-                        return response(['status'=>'Cannot edit Movie']);
+                        return response()->json(['status'=>'Failed to add movie'], 404);
                     }
 
                 }
 
              // Otherwise, movie is unavailable:
             }elseif($movieStatus == 'NO'){
-                return response(['status'=>'Movie unavailable']);
+                return response()->json(['status'=>'Movie unavailable'], 403);
 
-             // Invalid status:
+                // Invalid status:
             }else{
-                return response(['status'=>'Movie status invalid']);
+                return response()->json(['status'=>'Movie status invalid'], 403);
             }
 
          // Otherwise, return failure of client or movie is not found:
         }else{
-            return response(['status'=>'Client or Movie not found']);
+            return response()->json(['status'=>'Client or Movie not found'], 404);
         }
 
     }
@@ -296,28 +293,30 @@ class dvdController extends Controller
 
                 // If client edit successfully:
                 if ($client->addMovie($input, $name)) {
-                    response(['status' => 'success']);
-                } else {
-                    return response(['status' => 'Cannot add Client details']);
-                }
 
-                // Edit movie status to unavailable
+                    response()->json(['status'=>'success'], 201);
 
-                // If movie edit successfully:
-                if ($movie->editMovie(['Status' => 'YES'], $movieName)) {
-                    response(['status' => 'success']);
+                    // Edit movie status to available
+
+                    // If movie edit successfully:
+                    if ($movie->editMovie(['Status' => 'YES'], $movieName)) {
+                        return response()->json(['status'=>'success'], 200);
+                    }else{
+                        return response()->json(['status'=>'Failed to edit movie'], 404);
+                    }
+
                 } else {
-                    return response(['status' => 'Cannot edit Movie']);
+                    return response()->json(['status'=>'Failed to add movie'], 404);
                 }
 
                 // Otherwise, most recent of client's details are incorrect:
             }else{
-                return response(['status'=>'Details incorrect']);
+                return response()->json(['status'=>'Details incorrect'], 403);
             }
 
             // Otherwise, return failure of client or movie is not found:
         }else{
-            return response(['status'=>'Client or Movie not found']);
+            return response()->json(['status'=>'Client or Movie not found'], 404);
         }
 
     }
